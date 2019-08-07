@@ -1,10 +1,13 @@
 Package: BTemergence
 Type: Package
-Title: What the Package Does (Title Case)
+Title: BTemergence: Timing of activity in blue tits
 Version: 0.1.0
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Depends: R (>= 3.0.0), data.table, maptools, lme4, gamm4
-Suggests: BTemergenceData, SNB2, sdb (>= 0.0.58), DBI
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Authors@R: person("Lotte", "Schlicht", email = "lschlicht@orn.mpg.de", role = c("aut", "cre"))
+Depends: R (>= 3.5.0)
+Imports: lme4, gamm4, data.table, graphics, stats
+Suggests: BTemergenceData, SNB2, sdb (>= 0.0.58), DBI, maptools
+Description: Package that provides the data, scripts, and functions underlying Schlicht & Kempenaers 2019.
+Encoding: UTF-8
+License: GPL-3
 LazyData: TRUE
+RoxygenNote: 6.1.1
