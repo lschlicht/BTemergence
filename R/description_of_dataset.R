@@ -1,4 +1,4 @@
-#' Full dataset
+#' Full dataset of blue tit activity
 #'
 #' @docType data
 #'
