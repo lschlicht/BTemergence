@@ -1,11 +1,16 @@
+#load data
+data("BTemergenceData")
+#note that the models have to be run first, and they take long to compute.
+#set working directory to the folder you need.
+setwd("/ds/grpkempenaers/Lotte/R Studio Projects/Data for package BTemergence/figures")
+
 LAS = 1
-MALE_COLOUR = "#5000FFFF" #bpy.colors(n = 4), take 2 and 3
+MALE_COLOUR = "#5000FFFF"
 FEMALE_COLOUR = "#FF758AFF"
-ADULT_COLOUR = "#000033FF" #bpy.colors(n = 5), take 1 and 4
+ADULT_COLOUR = "#000033FF"
 YEARLING_COLOUR = "#FF9C63FF"
 
 #Figure 1-3: Seasonal patterns split up by sex, variable, and day(te) ####
-jpeg(file = "inst/figures/Fig1_Seasonal patterns.jpg", width = 480, height = 720)
 ###datasets: ####
 ###date_ dataset
 {
@@ -75,9 +80,9 @@ jpeg(file = "inst/figures/Fig1_Seasonal patterns.jpg", width = 480, height = 720
 }
 
 ###Figure 1####
-jpeg(file = paste0(getwd(), "/figures/F1_Dawn behaviour.jpg"), width = 1800, height = 1800)
-plot_descriptive_figure(modellist_yday = list(sr_m1, sr_f1),
-                        modellist_rel_day = list(sr_m2, sr_f2),
+jpeg(file = paste0(getwd(), "/F1_Dawn behaviour.jpg"), width = 1800, height = 1800)
+plot_descriptive_figure(modellist_yday = list(var_day.sex[[1]], var_day.sex[[3]]),
+                        modellist_rel_day = list(var_day.sex[[2]], var_day.sex[[4]]),
                         d_list = list(D[[1]], DR[[1]], D[[2]], DR[[2]]),
                         out_list = list(OUT[[1]], OUTR[[1]], OUT[[2]], OUTR[[2]]),
                         YLAB = "Onset of activity",
@@ -86,9 +91,9 @@ plot_descriptive_figure(modellist_yday = list(sr_m1, sr_f1),
 dev.off()
 
 ###Figure 2####
-jpeg(file = paste0(getwd(), "/figures/F2_Dusk behaviour.jpg"), width = 1800, height = 1800)
-plot_descriptive_figure(modellist_yday = list(ss_m1, ss_f1),
-                        modellist_rel_day = list(ss_m2, ss_f2),
+jpeg(file = paste0(getwd(), "/F2_Dusk behaviour.jpg"), width = 1800, height = 1800)
+plot_descriptive_figure(modellist_yday = list(var_day.sex[[5]], var_day.sex[[7]]),
+                        modellist_rel_day = list(var_day.sex[[6]], var_day.sex[[8]]),
                         d_list = list(D[[3]], DR[[3]], D[[4]], DR[[4]]),
                         out_list = list(OUT[[3]], OUTR[[3]], OUT[[4]], OUTR[[4]]),
                         YLAB = "Cessation of activity",
@@ -97,7 +102,7 @@ plot_descriptive_figure(modellist_yday = list(ss_m1, ss_f1),
 dev.off()
 
 ###Figure 3####
-jpeg(file = paste0(getwd(), "/figures/F3_Day behaviour.jpg"), width = 1000, height = 300)
+jpeg(file = paste0(getwd(), "/F3_Day behaviour.jpg"), width = 1000, height = 300)
 
 #data actual sunlight
 actYDAY = dcast(subset(x2, YDAY < 90), YDAY ~ ., fun = mean, value.var = "actualDaylength")
@@ -112,7 +117,7 @@ line.stage = -1
 layout(matrix(1:2, ncol = 2, byrow = TRUE), widths = c(0.55, 0.45))
 par(las = 2)
 par(mar = c(5.1, 6.1, 2.1, 0.1))
-create_gamm_plot(var = "daylength", data = subset(x2, YDAY < 90), modelset = list(act_m1, act_f1) , ylab = list("Hours of activity", cex = 2), COL = c(MALE_COLOUR, FEMALE_COLOUR), xlim = c(-97, 90), xlab = "Date (1 = 1 January)", ylim = c(8, 16), se = 1.96)
+create_gamm_plot(var = "daylength", data = subset(x2, YDAY < 90), modelset = list(var_day.sex[[9]], var_day.sex[[11]]) , ylab = list("Hours of activity", cex = 2), COL = c(MALE_COLOUR, FEMALE_COLOUR), xlim = c(-97, 90), xlab = "Date (1 = 1 January)", ylim = c(8, 16), se = 1.96)
 axis(1, las = 0)
 lines(x = actYDAY[, YDAY], y = actYDAY[, actualDaylength])
 axis(1, at = c(-10:10)*10, labels = NA, tcl = 0.5)
@@ -120,7 +125,7 @@ mtext(text = c('O', 'N', 'D', 'J', 'F', 'M'), side = 3, line = -2, at = c(-77.5,
 
 
 par(mar = c(5.1, 0.1, 2.1, 6.1))
-create_gamm_plot(var = "daylength", data = subset(x2, rel_day > -21), modelset = list(act_m2, act_f2) , ylab = "", COL = c(MALE_COLOUR, FEMALE_COLOUR), xlim = c(-21, 60), xlab = "Days to first egg", yaxt = 'n', ylim = c(8, 16), se = 1.96)
+create_gamm_plot(var = "daylength", data = subset(x2, rel_day > -21), modelset = list(var_day.sex[[10]], var_day.sex[[12]]) , ylab = "", COL = c(MALE_COLOUR, FEMALE_COLOUR), xlim = c(-21, 60), xlab = "Days to first egg", yaxt = 'n', ylim = c(8, 16), se = 1.96)
 
 axis(1, las = 0)
 axis(3, at = c(0, 10, 24, 44), labels = rep('', 4), tcl = -2)
@@ -140,7 +145,7 @@ dev.off()
 
 
 #Figure 4: Seasonal patterns and sex and age ####
-load("/ds/grpkempenaers/Lotte/R Studio projects/Data for package BTemergence/models/var_day.sex.age_F.RData")
+#load model var_day.sex.age_F.RData
 dat1 = data.table(coefficients(summary(unlist(var_day.sex.age_F, recursive = FALSE)[[1]]$mer))[1:4,])
 dat1[, sex := c(1,1,2,2)]; dat1[, age := c(1,2,1,2)]; dat1[, var := "Times to sunrise"];  dat1[, dayvar := "YDAY"]
 dat2 = data.table(coefficients(summary(unlist(var_day.sex.age_F, recursive = FALSE)[[2]]$mer))[1:4,])
@@ -161,16 +166,13 @@ datFig[, PCH := rep(c(21,16,24,17),4)]
 setkey(datFig, var, dayvar, YY)
 
 {
-jpeg(file = paste0(getwd(), "/figures/F4_Sex and age.jpg"), width = 1800, height = 1800)
+jpeg(file = paste0(getwd(), "/F4_Sex and age.jpg"), width = 1800, height = 1800)
 YLIM = c(0.5, 4.5)
 
 par(mfrow = c(2,2))
 par(las = 0)
 par(cex = 3, cex.lab = 3, lwd = 6)
 plot_labels = c("(A)", "(B)", "(C)", "(D)")
-#XLIM_LIST = list(c(-32, -8.5), c(-19, 5.5),
-
-#XLIM = c(-34, 5.5)
 
 for(i in c(0, 4, 8, 12)) {
   j = 1:4 + i
@@ -188,8 +190,6 @@ for(i in c(0, 4, 8, 12)) {
   text(XLIM[1]-0.1, 4.4, plot_labels[(i/4)+1], adj = 0, cex = 1.4)
   axis(1, at = -100:100, labels = NA, tcl = -0.3)
 }
-#mtext(1, at = c(2.5), labels = c("Times to sunrise (Estimate±CI)"), cex.axis = 1.2, tick = FALSE)
-#mtext(1, at = c(2.5), labels = c("Times to sunset (Estimate±CI)"), cex.axis = 1.2, tick = FALSE)
 
 mtext("Non-Breeding", outer = TRUE, side=3, line = -1, at = 0.25, cex = 3.5, adj = 0.5)
 mtext("Breeding", outer = TRUE, side=3, line = -1, at = 0.75, cex = 3.5, adj = 0.5)
@@ -203,6 +203,7 @@ dev.off()
 
 
 #Figure 5: Effects of the environment ####
+#load models z_var_day.sex.env_females_F and z_var_day.sex.env_males_F
 df = data.table(expand.grid(env = c("precipitation_dawn", "rainfall", "temperature"), variable = c("time_to_sunrise_min", "time_to_sunset_min"), varday = c("YDAY", "rel_day")))
 
 models = unlist(z_var_day.sex.env_males, recursive = FALSE)
@@ -235,7 +236,7 @@ df[, YY := YY + SHIFT]
 df[sex == 1, PCH := ifelse(varday == "YDAY", 16,21)]
 df[sex == 2, PCH := ifelse(varday == "YDAY", 17,24)]
 {
-jpeg(file = paste0(getwd(), "/figures/F5_Environment.jpg"), width = 1800, height = 1800)
+jpeg(file = paste0(getwd(), "/F5_Environment.jpg"), width = 1800, height = 1800)
 
 layout(c(1,2), heights = c(1,1))
 
@@ -254,12 +255,12 @@ dev.off()
 
 #Figure S1: Environment ####
 #plot environment over the years
-ENV = subset(x, select = c("date_", 'YDAY', 'avgTemperature', 'precipitation_dawn', 'precipitation_dusk'))
+ENV = subset(x2, select = c("date_", 'YDAY', 'avgTemperature', 'precipitation_dawn', 'precipitation_dusk'))
 ENV = unique(ENV)
 ENV = dcast(ENV, YDAY ~ ., value.var = c("avgTemperature", "precipitation_dawn", "precipitation_dusk"), fun = list(mean, min, max, median), na.rm = TRUE)
 
 {
-jpeg(file = paste0(getwd(), "/figures/S1_Rainfall and temperature.jpg"), width = 1800, height = 1800)
+jpeg(file = paste0(getwd(), "/S1_Rainfall and temperature.jpg"), width = 1800, height = 1800)
 YLIM = c(-16, 27)
 par(cex.lab = 6, cex.axis = 4, mgp = c(10,4,0), las = LAS, lwd = 4, tcl = -2)
 par(mfrow = c(3,1))
@@ -308,9 +309,9 @@ dev.off()
 
 #Figure S2: sample sizes YDAY ####
 {
-jpeg(file = paste0(getwd(), "/figures/S2_Sample sizes_YDAY.jpg"), width = 480, height = 480)
+jpeg(file = paste0(getwd(), "/S2_Sample sizes_YDAY.jpg"), width = 480, height = 480)
 
-ss = subset(x, YDAY < 90, select = c('ID', 'breeding_season', 'sex', 'age', 'YDAY'))
+ss = subset(x2, YDAY < 90, select = c('ID', 'breeding_season', 'sex', 'age', 'YDAY'))
 ym = table(ss[age == 1 & sex == 1,YDAY])
 am = table(ss[age == 2 & sex == 1,YDAY])
 yf = table(ss[age == 1 & sex == 2,YDAY])
@@ -341,9 +342,9 @@ dev.off()
 #Figure S3: sample sizes rel_day####
 {
 
-jpeg(file = paste0(getwd(), "/figures/S3_Sample sizes_rel_day.jpg"), width = 480, height = 480)
+jpeg(file = paste0(getwd(), "/S3_Sample sizes_rel_day.jpg"), width = 480, height = 480)
 
-  ss = unique(subset(x, rel_day > -21, select = c('ID', 'year_', 'sex', 'age', 'rel_day')))
+  ss = unique(subset(x2, rel_day > -21, select = c('ID', 'sex', 'age', 'rel_day')))
   ym = table(ss[age == 1 & sex == 1,rel_day])
   am = table(ss[age == 2 & sex == 1,rel_day])
   yf = table(ss[age == 1 & sex == 2,rel_day])
@@ -391,7 +392,7 @@ year_ID = subset(year_ID, take == count)
 
 #c. plot morning ######
 {
-jpeg(file = paste0(getwd(), "/figures/S4_Examples_morning.jpg"), width = 1800, height = 1800)
+jpeg(file = paste0(getwd(), "/S4_Examples_morning.jpg"), width = 1800, height = 1800)
 
 
 par(mfrow = c(4,1))
@@ -429,7 +430,7 @@ dev.off()
 
 #d. plot evening ######
 {
-jpeg(file = paste0(getwd(), "/figures/S5_Examples_evening.jpg"), width = 1800, height = 1800)
+jpeg(file = paste0(getwd(), "/S5_Examples_evening.jpg"), width = 1800, height = 1800)
 par(mfrow = c(4,1))
 par(cex.axis=4, cex.lab=5, lwd = 2, las = 2, mgp = c(8,4,0), las = LAS, cex = 1, tcl = -1.8, las = LAS)
 XLAB = list("Days to first egg")
@@ -458,14 +459,11 @@ par(mar = c(mar.bottom, mar.left, 0.2, 0.2))
 plot_individuals(x2, i = 4, var = VAR, xlab = XLAB, ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "adult female (2017)", bty = 'n', cex = cex.legend)
 
-mtext("Times to sunset", side = 2, las = 0, line = -5, outer = TRUE, , cex = par("cex.lab"))
+mtext("Times to sunset", side = 2, las = 0, line = -5, outer = TRUE, cex = par("cex.lab"))
 
 dev.off()
 
 }
-
-
-
 
 
 
@@ -580,23 +578,23 @@ tmp -> tmp2
 
 ###plot ########
 
-jpeg(file = paste0(getwd(), "/figures/S6_Temperature and onset of activity across year.jpg"), width = 900, height = 900)
+jpeg(file = paste0(getwd(), "/S6_Temperature and onset of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[1]], tmp1[[2]]), tmp2 = list(tmp2[[1]], tmp2[[2]]), YLIM = c(-0.3, 0.2), XLAB = "", YLAB = "Effect of temperature\r\n")
 mtext("Onset of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
 
-jpeg(file = paste0(getwd(), "/figures/S7_Temperature and cessation of activity across year.jpg"), width = 900, height = 900)
+jpeg(file = paste0(getwd(), "/S7_Temperature and cessation of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[3]], tmp1[[4]]), tmp2 = list(tmp2[[3]], tmp2[[4]]), YLIM = c(-0.05, 0.45), XLAB = "", YLAB = "Effect of temperature\r\n")
 mtext("Cessation of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
 
 
-jpeg(file = paste0(getwd(), "/figures/S8_Rainfall and onset of activity across year.jpg"), width = 900, height = 900)
+jpeg(file = paste0(getwd(), "/S8_Rainfall and onset of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[5]], tmp1[[6]]), tmp2 = list(tmp2[[5]], tmp2[[6]]), YLIM = c(-0.05, 0.45), XLAB = "", YLAB = " Effect of rainfall at dawn\r\n")
 mtext("Onset of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
 
-jpeg(file = paste0(getwd(), "/figures/S9_Rainfall and cessation of activity across year.jpg"), width = 900, height = 900)
+jpeg(file = paste0(getwd(), "/S9_Rainfall and cessation of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[7]], tmp1[[8]]), tmp2 = list(tmp2[[7]], tmp2[[8]]), YLIM = c(-0.3, 0.2), XLAB = "Cessation of activity", YLAB = "Effect of rainfall at dusk\r\n")
 mtext("Cessation of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
