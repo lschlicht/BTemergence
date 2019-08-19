@@ -3,7 +3,7 @@
 \docType{data}
 \name{x2}
 \alias{x2}
-\title{Full dataset}
+\title{Full dataset of blue tit activity}
 \format{A data table with 35193 rows and 31 columns
 \describe{
 \item{ID}{Bird band number}
@@ -42,6 +42,6 @@
 data(BTemergenceData)
 }
 \description{
-Full dataset
+Full dataset of blue tit activity
 }
 \keyword{datasets}

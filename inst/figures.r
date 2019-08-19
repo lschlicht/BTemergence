@@ -408,21 +408,21 @@ cex.legend = 3
 PLOT.LINES = TRUE
 
 par(mar = c(0.1, mar.left, mar.bottom, 0.2))
-plot_individuals(x2, i = 1, var = VAR, xaxt = 'n', ylab = '', xlab= '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 1, year_ID = year_ID, var = VAR, xaxt = 'n', ylab = '', xlab= '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "yearling male (2016)", bty = 'n', cex = cex.legend)
 
 par(mar = c(mar.bottom/3, mar.left, 2*(mar.bottom/3), 0.2))
-plot_individuals(x2, i = 2, var = VAR, xaxt = 'n', ylab = '', xlab= '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 2, year_ID = year_ID, var = VAR, xaxt = 'n', ylab = '', xlab= '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "adult male (2015)", bty = 'n', cex = cex.legend)
 
 par(mar = c(2*(mar.bottom)/3, mar.left, mar.bottom/3, 0.2))
-plot_individuals(x2, i = 3, var = VAR, xaxt = 'n', ylab = '', xlab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 3, year_ID = year_ID, var = VAR, xaxt = 'n', ylab = '', xlab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "yearling female (2015)", bty = 'n', cex = cex.legend)
 
 par(mar = c(mar.bottom, mar.left, 0.2, 0.2))
-plot_individuals(x2, i = 4, var = VAR, ylab = '', xlab = XLAB, xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 4, year_ID = year_ID, var = VAR, ylab = '', xlab = XLAB, xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "adult female (2017)", bty = 'n', cex = cex.legend)
-mtext("Times to sunrise", side = 2, las = 0, line = -5, outer = TRUE, cex = par("cex.lab"))
+mtext("Times to sunrise (minutes)", side = 2, las = 0, line = -5, outer = TRUE, cex = par("cex.lab"))
 
 dev.off()
 
@@ -444,22 +444,22 @@ cex.legend = 3
 PLOT.LINES = TRUE
 
 par(mar = c(0.1, mar.left, mar.bottom, 0.2))
-plot_individuals(x2, i = 1, var = VAR, xaxt = 'n', xlab = '', ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 1, year_ID = year_ID, var = VAR, xaxt = 'n', xlab = '', ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "yearling male (2016)", bty = 'n', cex = cex.legend)
 
 par(mar = c(mar.bottom/3, mar.left, 2*(mar.bottom/3), 0.2))
-plot_individuals(x2, i = 2, var = VAR, xaxt = 'n', xlab = '', ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 2, year_ID = year_ID, var = VAR, xaxt = 'n', xlab = '', ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "adult male (2015)", bty = 'n', cex = cex.legend)
 
 par(mar = c(2*(mar.bottom)/3, mar.left, mar.bottom/3, 0.2))
-plot_individuals(x2, i = 3, var = VAR, xaxt = 'n', xlab = '', ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 3, year_ID = year_ID, var = VAR, xaxt = 'n', xlab = '', ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "yearling female (2015)", bty = 'n', cex = cex.legend)
 
 par(mar = c(mar.bottom, mar.left, 0.2, 0.2))
-plot_individuals(x2, i = 4, var = VAR, xlab = XLAB, ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
+plot_individuals(x2, i = 4, year_ID = year_ID, var = VAR, xlab = XLAB, ylab = '', xlim = XLIM, ylim = YLIM, lty = LTY, cex = 2, plot.lines = PLOT.LINES)
 legend(-218, 70, "adult female (2017)", bty = 'n', cex = cex.legend)
 
-mtext("Times to sunset", side = 2, las = 0, line = -5, outer = TRUE, cex = par("cex.lab"))
+mtext("Times to sunset (minutes)", side = 2, las = 0, line = -5, outer = TRUE, cex = par("cex.lab"))
 
 dev.off()
 
