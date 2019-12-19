@@ -104,7 +104,27 @@ for(i in 1 : length(models)) {
   print(summary(models[[i]]$gam))
 }
 #no major effects of age, only one that may be relevant (see MS)
+#---> remove three way interaction with age and run again
+
+#Results without threeway interactions. variable ~ day.sex.age.env; scaled environment; without three-way interaction #####
+runthrough = data.table(explanatory = c(
+  "z_precipitation_dawn*sex2 + z_precipitation_dawn*age2 + sex2*age2","z_avgTemperature*sex2 + z_avgTemperature*age2 + sex2*age2", "z_precipitation_dusk*sex2 + z_precipitation_dusk*age2 + sex2*age2", "z_avgTemperature*sex2 + z_avgTemperature*age2 + sex2*age2"),
+  response = c(rep("z_time_to_sunrise_min",2), rep("z_time_to_sunset_min",2)), stringsAsFactors = FALSE)
+
+z_var_day.sex.env1 = apply(runthrough, MARGIN = 1, FUN = function(variables, data) gamm4.2(response = variables[2], k_gamm = K, by_gamm = "sex_age", explanatory = variables[1], data = data, smooth_over = 'YDAY', rm.intercept = TRUE), data = subset(x2, YDAY < 90 & !is.na(age)) )
+z_var_day.sex.env2 = apply(runthrough, MARGIN = 1, FUN = function(variables, data) gamm4.2(response = variables[2], k_gamm = K, by_gamm = "sex_age", explanatory = variables[1], data = data, smooth_over = 'rel_day', rm.intercept = TRUE), data = subset(x2, rel_day >= -21) )
+z_var_day.sex.env_no3wayint = list(z_var_day.sex.env1, z_var_day.sex.env2)
+save(z_var_day.sex.env_no3wayint, file = paste0(getwd(), "/data/z_var_day.sex.env_F_withageno3wayint.RData"))
+
+
+models = unlist(z_var_day.sex.env_no3wayint, recursive = FALSE)
+for(i in 1 : length(models)) {
+  print("##############################################################")
+  print(summary(models[[i]]$gam))
+}
+#no major effects of age, only one that may be relevant (see MS)
 #---> remove age
+
 
 ######for males ######
 runthrough = data.table(explanatory = c(
@@ -146,3 +166,49 @@ var_day.sex.env1 = apply(runthrough, MARGIN = 1, FUN = function(variables, data)
 var_day.sex.env2 = apply(runthrough, MARGIN = 1, FUN = function(variables, data) gamm4.2(response = variables[2], k_gamm = K, by_gamm = "sex_age", explanatory = variables[1], data = data, smooth_over = 'rel_day', rm.intercept = FALSE), data = subset(x2, rel_day >= -21) )
 var_day.sex.env_T = list(var_day.sex.env1, var_day.sex.env2)
 save(var_day.sex.env_T, file = paste0(getwd(), "/data/var_day.sex.env_T.RData"))
+
+# Repeatabilities #####
+runthrough = data.table(explanatory = c(
+  "z_precipitation_dawn + z_avgTemperature", "z_precipitation_dusk + z_avgTemperature"),
+  response = c("z_time_to_sunrise_min", "z_time_to_sunset_min"), stringsAsFactors = FALSE)
+K = 40
+z_var_day.sex.env.rpt1 = apply(runthrough, MARGIN = 1, FUN = function(variables, data) gamm4.2(response = variables[2], k_gamm = K, by_gamm = "age", explanatory = variables[1], data = data, smooth_over = 'YDAY', rm.intercept = TRUE), data = subset(x2, YDAY < 90 & !is.na(age) & sex == 1) )
+z_var_day.sex.env.rpt2 = apply(runthrough, MARGIN = 1, FUN = function(variables, data) gamm4.2(response = variables[2], k_gamm = K, by_gamm = "age", explanatory = variables[1], data = data, smooth_over = 'YDAY', rm.intercept = TRUE), data = subset(x2, YDAY < 90 & !is.na(age) & sex == 2) )
+z_var_day.sex.env.rpt3 = apply(runthrough, MARGIN = 1, FUN = function(variables, data) gamm4.2(response = variables[2], k_gamm = K, by_gamm = "age", explanatory = variables[1], data = data, smooth_over = 'rel_day', rm.intercept = TRUE), data = subset(x2, rel_day >= -21 & sex == 1) )
+z_var_day.sex.env.rpt4 = apply(runthrough, MARGIN = 1, FUN = function(variables, data) gamm4.2(response = variables[2], k_gamm = K, by_gamm = "age", explanatory = variables[1], data = data, smooth_over = 'rel_day', rm.intercept = TRUE), data = subset(x2, rel_day >= -21 & sex == 2) )
+
+
+z_var_day.sex.env.rpt = list(z_var_day.sex.env.rpt1, z_var_day.sex.env.rpt2, z_var_day.sex.env.rpt3, z_var_day.sex.env.rpt4)
+save(z_var_day.sex.env.rpt, file = paste0(getwd(), "/data/z_var_day.sex.env.rpt.RData"))
+
+
+models = unlist(z_var_day.sex.env.rpt, recursive = FALSE)
+
+for(i in 1 : length(models)) {
+tmp = as.data.table(VarCorr(models[[i]]$mer))
+tmp = tmp[grp == random_gamm, vcov]/sum(tmp[grp == random_gamm, vcov], tmp[grp == "Residual", vcov])
+print(tmp)
+}
+#order:
+#sunrise+ YDAY    + male    : 0.67
+#sunset + YDAY    + male    : 0.79
+#sunrise+ YDAY    + female  : 0.46
+#sunset + YDAY    + female  : 0.37
+#sunrise+ rel_day + male    : 0.49
+#sunset + rel_day + male    : 0.58
+#sunrise+ rel_day + female  : 0.39
+#sunset + rel_day + female  : 0.29
+
+#number of distinct
+
+bla = unique(subset(x2, select = c('sex', 'ID', 'yid')))
+bla[, N := length(sex), by = ID]
+bla = unique(subset(bla, select = c('sex', 'ID', 'N')))
+bla[, N2more := ifelse(N > 1, 1, 0)]
+table(bla$N, bla$sex)
+
+a = table(bla$N2more, bla$sex)
+a[1,1]/sum(a[1,1], a[2,1])
+a[1,2]/sum(a[1,2], a[2,2])
+sum(a[1,])/sum(a)
+sum(a[2,])

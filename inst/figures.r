@@ -1,6 +1,6 @@
 #load data
 data("BTemergenceData")
-#note that the models have to be run first, and they take long to compute.
+#note that the models have to be run first, and they take long to compute --> run them once and save them in a convenient location!
 #set working directory to the folder you need.
 setwd("/ds/grpkempenaers/Lotte/R Studio Projects/Data for package BTemergence/figures")
 
@@ -80,29 +80,30 @@ YEARLING_COLOUR = "#FF9C63FF"
 }
 
 ###Figure 1####
-jpeg(file = paste0(getwd(), "/F1_Dawn behaviour.jpg"), width = 1800, height = 1800)
+#setEPS()
+pdf(file = paste0(getwd(), "/F1_Dawn behaviour.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
 plot_descriptive_figure(modellist_yday = list(var_day.sex[[1]], var_day.sex[[3]]),
                         modellist_rel_day = list(var_day.sex[[2]], var_day.sex[[4]]),
                         d_list = list(D[[1]], DR[[1]], D[[2]], DR[[2]]),
                         out_list = list(OUT[[1]], OUTR[[1]], OUT[[2]], OUTR[[2]]),
-                        YLAB = "Onset of activity",
+                        YLAB = "Start of activity",
                         VAR = "time_to_sunrise_min",
                         ylim_boxplot = c(-60, 70), ylim_gammplot = c(-40, 20))
 dev.off()
 
 ###Figure 2####
-jpeg(file = paste0(getwd(), "/F2_Dusk behaviour.jpg"), width = 1800, height = 1800)
+pdf(file = paste0(getwd(), "/F2_Dusk behaviour.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
 plot_descriptive_figure(modellist_yday = list(var_day.sex[[5]], var_day.sex[[7]]),
                         modellist_rel_day = list(var_day.sex[[6]], var_day.sex[[8]]),
                         d_list = list(D[[3]], DR[[3]], D[[4]], DR[[4]]),
                         out_list = list(OUT[[3]], OUTR[[3]], OUT[[4]], OUTR[[4]]),
-                        YLAB = "Cessation of activity",
+                        YLAB = "End of activity",
                         VAR = "time_to_sunset_min",
                         ylim_boxplot = c(-150, 30), ylim_gammplot = c(-65, 10))
 dev.off()
 
 ###Figure 3####
-jpeg(file = paste0(getwd(), "/F3_Day behaviour.jpg"), width = 1000, height = 300)
+pdf(file = paste0(getwd(), "/F3_Day behaviour.pdf"), width = 15, height = 4.5, onefile = TRUE, paper = "special")
 
 #data actual sunlight
 actYDAY = dcast(subset(x2, YDAY < 90), YDAY ~ ., fun = mean, value.var = "actualDaylength")
@@ -166,7 +167,7 @@ datFig[, PCH := rep(c(21,16,24,17),4)]
 setkey(datFig, var, dayvar, YY)
 
 {
-jpeg(file = paste0(getwd(), "/F4_Sex and age.jpg"), width = 1800, height = 1800)
+pdf(file = paste0(getwd(), "/F4_Sex and age.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
 YLIM = c(0.5, 4.5)
 
 par(mfrow = c(2,2))
@@ -193,8 +194,8 @@ for(i in c(0, 4, 8, 12)) {
 
 mtext("Non-Breeding", outer = TRUE, side=3, line = -1, at = 0.25, cex = 3.5, adj = 0.5)
 mtext("Breeding", outer = TRUE, side=3, line = -1, at = 0.75, cex = 3.5, adj = 0.5)
-mtext("Time to sunrise (Estimate±CI)", outer = TRUE, side = 3, line = -20.5, cex = 3.5, adj = 0.5, at = 0.5)
-mtext("Time to sunset (Estimate±CI)", outer = TRUE, side = 3, line = -41, cex = 3.5, adj = 0.5, at = 0.5)
+mtext("Start of activity (Estimate±CI)", outer = TRUE, side = 3, line = -24.5, cex = 3.5, adj = 0.5, at = 0.5)
+mtext("End of activity (Estimate±CI)", outer = TRUE, side = 3, line = -49, cex = 3.5, adj = 0.5, at = 0.5)
 dev.off()
 }
 
@@ -236,17 +237,16 @@ df[, YY := YY + SHIFT]
 df[sex == 1, PCH := ifelse(varday == "YDAY", 16,21)]
 df[sex == 2, PCH := ifelse(varday == "YDAY", 17,24)]
 {
-jpeg(file = paste0(getwd(), "/F5_Environment.jpg"), width = 1800, height = 1800)
-
+pdf(file = paste0(getwd(), "/F5_Environment.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
 layout(c(1,2), heights = c(1,1))
 
 par(cex = 3.5, cex.axis = 1, cex.lab = 1, lwd = 4, mgp = c(2,1,0))
 par(mar = c(4.1, 8.1, 0.1, 0.1))
-plot_env(df = df, VARIABLE = "time_to_sunrise_min", xlim = c(-0.15, 0.25), ylim = c(0.5, 2.5), xlab = "Times to sunrise (Estimate±CI)")
+plot_env(df = df, VARIABLE = "time_to_sunrise_min", xlim = c(-0.15, 0.25), ylim = c(0.5, 2.5), xlab = "Start of activity (Estimate±CI)")
 axis(1, at = c(-10:10)/40, labels = NA, tcl = -0.3)
 legend("topright", c("non-breeding female", "breeding female", "non-breeding male", "breeding male"), lwd = 2, col = rep(c(FEMALE_COLOUR, MALE_COLOUR), each  = 2), pch = c(17, 24, 16, 21), bty = 'n', pt.bg = 'white')
 par(mar = c(4.1, 8.1, 0.1, 0.1))
-plot_env(df= df, VARIABLE = "time_to_sunset_min", xlim = c(-0.15, 0.25), ylim = c(0.5, 2.5), xlab = "Times to sunset (Estimate±CI)")
+plot_env(df= df, VARIABLE = "time_to_sunset_min", xlim = c(-0.15, 0.25), ylim = c(0.5, 2.5), xlab = "End of activity (Estimate±CI)")
 axis(1, at = c(-10:10)/40, labels = NA, tcl = -0.3)
 
 dev.off()
@@ -580,23 +580,23 @@ tmp -> tmp2
 
 jpeg(file = paste0(getwd(), "/S6_Temperature and onset of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[1]], tmp1[[2]]), tmp2 = list(tmp2[[1]], tmp2[[2]]), YLIM = c(-0.3, 0.2), XLAB = "", YLAB = "Effect of temperature\r\n")
-mtext("Onset of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
+mtext("Start of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
 
 jpeg(file = paste0(getwd(), "/S7_Temperature and cessation of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[3]], tmp1[[4]]), tmp2 = list(tmp2[[3]], tmp2[[4]]), YLIM = c(-0.05, 0.45), XLAB = "", YLAB = "Effect of temperature\r\n")
-mtext("Cessation of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
+mtext("End of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
 
 
 jpeg(file = paste0(getwd(), "/S8_Rainfall and onset of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[5]], tmp1[[6]]), tmp2 = list(tmp2[[5]], tmp2[[6]]), YLIM = c(-0.05, 0.45), XLAB = "", YLAB = " Effect of rainfall at dawn\r\n")
-mtext("Onset of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
+mtext("Start of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
 
 jpeg(file = paste0(getwd(), "/S9_Rainfall and cessation of activity across year.jpg"), width = 900, height = 900)
 plot_seasonal_progress(tmp1 = list(tmp1[[7]], tmp1[[8]]), tmp2 = list(tmp2[[7]], tmp2[[8]]), YLIM = c(-0.3, 0.2), XLAB = "Cessation of activity", YLAB = "Effect of rainfall at dusk\r\n")
-mtext("Cessation of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
+mtext("End of activity", side = 3, line = -1.5, outer = TRUE, cex = 2.5, adj = 0.6)
 dev.off()
 
 

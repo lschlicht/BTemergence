@@ -4,9 +4,9 @@ Title: BTemergence: Timing of activity in blue tits
 Version: 0.1.0
 Authors@R: person("Lotte", "Schlicht", email = "lschlicht@orn.mpg.de", role = c("aut", "cre"))
 Depends: R (>= 3.5.0)
-Imports: lme4, gamm4, data.table, graphics, stats
-Suggests: BTemergenceData, SNB2, sdb (>= 0.0.58), DBI, maptools
-Description: Package that provides the data, scripts, and functions underlying Schlicht & Kempenaers 2019.
+Imports: lme4, gamm4, data.table, graphics, stats, gamm4
+Suggests: BTemergenceData, SNB2, sdb (>= 0.0.58), DBI, maptools, gamm4
+Description: Package that provides the data, scripts, and functions underlying "The effects of season, sex, age and weather on population-level variation in timing of activity in Blue Tits Cyanistes caeruleus", Schlicht & Kempenaers 2019, IBIS.
 Encoding: UTF-8
 License: GPL-3
 LazyData: TRUE
