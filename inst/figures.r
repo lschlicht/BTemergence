@@ -3,7 +3,7 @@ data("BTemergenceData")
 #note that the models have to be run first, and they take long to compute --> run them once and save them in a convenient location!
 #set working directory to the folder you need.
 setwd("/ds/grpkempenaers/Lotte/R Studio Projects/Data for package BTemergence/figures")
-
+require(data.table)
 LAS = 1
 MALE_COLOUR = "#5000FFFF"
 FEMALE_COLOUR = "#FF758AFF"
@@ -11,6 +11,16 @@ ADULT_COLOUR = "#000033FF"
 YEARLING_COLOUR = "#FF9C63FF"
 
 #Figure 1-3: Seasonal patterns split up by sex, variable, and day(te) ####
+#repeatabilities:
+#order:
+#sunrise+ YDAY    + male    : 0.67
+#sunset + YDAY    + male    : 0.79
+#sunrise+ YDAY    + female  : 0.46
+#sunset + YDAY    + female  : 0.37
+#sunrise+ rel_day + male    : 0.49
+#sunset + rel_day + male    : 0.58
+#sunrise+ rel_day + female  : 0.39
+#sunset + rel_day + female  : 0.29
 ###datasets: ####
 ###date_ dataset
 {
@@ -78,10 +88,9 @@ YEARLING_COLOUR = "#FF9C63FF"
 
   }
 }
-
+#load model var_day.sex
 ###Figure 1####
-#setEPS()
-pdf(file = paste0(getwd(), "/F1_Dawn behaviour.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
+{pdf(file = paste0(getwd(), "/F1_Dawn behaviour.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
 plot_descriptive_figure(modellist_yday = list(var_day.sex[[1]], var_day.sex[[3]]),
                         modellist_rel_day = list(var_day.sex[[2]], var_day.sex[[4]]),
                         d_list = list(D[[1]], DR[[1]], D[[2]], DR[[2]]),
@@ -89,10 +98,16 @@ plot_descriptive_figure(modellist_yday = list(var_day.sex[[1]], var_day.sex[[3]]
                         YLAB = "Start of activity",
                         VAR = "time_to_sunrise_min",
                         ylim_boxplot = c(-60, 70), ylim_gammplot = c(-40, 20))
+mtext('R = 0.67', adj = 0, side = 3, line = 132, at = -47, cex = 3.4, las = 1)
+mtext('R = 0.49', adj = 0, side = 3, line = 132, at = 40, cex = 3.4, las = 1)
+mtext('R = 0.46', adj = 0, side = 3, line = 62, at = -47, cex = 3.4, las = 1)
+mtext('R = 0.39', adj = 0, side = 3, line = 62, at = 40, cex = 3.4, las = 1)
 dev.off()
+}
 
-###Figure 2####
-pdf(file = paste0(getwd(), "/F2_Dusk behaviour.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
+
+  ###Figure 2####
+{pdf(file = paste0(getwd(), "/F2_Dusk behaviour.pdf"), width = 30, height = 30, onefile = TRUE, paper = "special")
 plot_descriptive_figure(modellist_yday = list(var_day.sex[[5]], var_day.sex[[7]]),
                         modellist_rel_day = list(var_day.sex[[6]], var_day.sex[[8]]),
                         d_list = list(D[[3]], DR[[3]], D[[4]], DR[[4]]),
@@ -100,8 +115,15 @@ plot_descriptive_figure(modellist_yday = list(var_day.sex[[5]], var_day.sex[[7]]
                         YLAB = "End of activity",
                         VAR = "time_to_sunset_min",
                         ylim_boxplot = c(-150, 30), ylim_gammplot = c(-65, 10))
-dev.off()
+mtext('Males', adj = 0, side = 3, line = 80, at = -130, cex = 3.4, las = 1)
+mtext('Females', adj = 0, side = 3, line = 10, at = -130, cex = 3.4, las = 1)
+mtext('R = 0.79', adj = 0, side = 3, line = 80, at = -47, cex = 3.4, las = 1)
+mtext('R = 0.58', adj = 0, side = 3, line = 80, at = 40, cex = 3.4, las = 1)
+mtext('R = 0.37', adj = 0, side = 3, line = 10, at = -47, cex = 3.4, las = 1)
+mtext('R = 0.29', adj = 0, side = 3, line = 10, at = 40, cex = 3.4, las = 1)
 
+dev.off()
+}
 ###Figure 3####
 pdf(file = paste0(getwd(), "/F3_Day behaviour.pdf"), width = 15, height = 4.5, onefile = TRUE, paper = "special")
 
